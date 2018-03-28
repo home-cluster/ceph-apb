@@ -1,0 +1,10 @@
+- name: ceph-apb playbook to provision the application
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars:
+    state: present
+  roles:
+  - role: ansibleplaybookbundle.asb-modules
+  - role: ceph-apb
+    playbook_debug: false
