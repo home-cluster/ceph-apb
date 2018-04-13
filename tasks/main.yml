@@ -163,6 +163,7 @@
       apiVersion: v1beta1
       metadata:
         name: rook-operator
+        namespace: rook-system
       roleRef:
         apiGroup: rbac.authorization.k8s.io
         kind: ClusterRole
@@ -171,6 +172,10 @@
       - kind: ServiceAccount
         name: rook-operator
         namespace: rook-system
+
+# TOOD: good testing ground for dynamic client integration
+- name: create CustomResourceDefinitions
+  command: oc create -f /opt/ansible/roles/ceph-apb/templates/customresourcedefinitions.yaml.j2
 
 - name: create operator
   k8s_raw:
