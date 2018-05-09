@@ -12,10 +12,4 @@ plans:
     metadata:
       displayName: Ceph containerized storage
       longDescription: Deploys rook with a ceph backend for cluster storage
-    parameters:
-      - name: admin_api_key
-        type: string
-        title: Token to authenticate against the openshift API. Will need to have cluster-admin permissions
-        display_group: Authentication
-        display_type: password
-        required: true
+    parameters: {}  # TODO
