@@ -12,6 +12,7 @@ update: ## Pull new source files from the Rook project
 		echo $$item && \
 		cp ${tmpdir}/rook/cluster/examples/kubernetes/ceph/$${item}.yaml files/$${item}.yaml ; \
 	done
+	sed -i '/ROOK_HOSTPATH_REQUIRES_PRIVILEGED/{n;s/\(.*value: \)"false"/\1"true"/}' files/operator.yaml
 
 
 build: ## Build the APB
