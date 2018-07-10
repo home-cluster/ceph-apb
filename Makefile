@@ -13,7 +13,8 @@ update: ## Pull new source files from the Rook project
 		cp ${tmpdir}/rook/cluster/examples/kubernetes/ceph/$${item}.yaml files/$${item}.yaml ; \
 	done
 	sed -i '/ROOK_HOSTPATH_REQUIRES_PRIVILEGED/{n;s/\(.*value: \)"false"/\1"true"/}' files/operator.yaml
-
+	sed -i 's/\(.*\)# \(- name: FLEXVOLUME_DIR_PATH\)/\1\2/' files/operator.yaml
+	sed -i '/FLEXVOLUME_DIR_PATH/{n;s|\(.*\)#\(\s*value: \).*|\1\2"/var/lib/origin/volumeplugins/"|}' files/operator.yaml
 
 build: ## Build the APB
 ifeq ($(TAG),canary)
