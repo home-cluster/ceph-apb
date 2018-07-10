@@ -16,16 +16,16 @@ update: ## Pull new source files from the Rook project
 
 build: ## Build the APB
 ifeq ($(TAG),canary)
-	docker build -f ${APB_DIR}/Dockerfile --build-arg VERSION=${TAG} --build-arg APB=${TAG} -t ${IMAGE} ${APB_DIR}
+	docker build -f ${APB_DIR}/Dockerfile  --build-arg APB=${TAG} -t ${IMAGE} ${APB_DIR}
 else ifneq (,$(findstring release,$(TAG)))
-	docker build -f ${APB_DIR}/Dockerfile --build-arg VERSION=${TAG} --build-arg APB=${TAG} -t ${IMAGE} ${APB_DIR}
+	docker build -f ${APB_DIR}/Dockerfile  --build-arg APB=${TAG} -t ${IMAGE} ${APB_DIR}
 else
-	docker build -f ${APB_DIR}/Dockerfile --build-arg VERSION=${TAG} -t ${IMAGE} ${APB_DIR}
+	docker build -f ${APB_DIR}/Dockerfile -t ${IMAGE} ${APB_DIR}
 endif
 
 publish: build ## Publish the APB
+	@echo "Publishing to ${IMAGE}"
 ifdef PUBLISH
-	docker push ${BROKER_IMAGE}
 	docker push ${IMAGE}
 else
 	@echo "Must set PUBLISH, here be dragons"

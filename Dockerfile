@@ -11,8 +11,8 @@ c2NyaXB0aW9uOiBEZXBsb3lzIHJvb2sgd2l0aCBhIGNlcGggYmFja2VuZCBmb3IgY2x1c3RlciBz\
 dG9yYWdlCiAgICBwYXJhbWV0ZXJzOiB7fSAgIyBUT0RPCg=="
 
 ADD playbooks /opt/apb/actions
-ADD . /opt/ansible/roles/ceph-apb
 
 RUN chmod -R g=u /opt/{ansible,apb}
 
 USER apb
+ADD . /opt/ansible/roles/ceph-apb
