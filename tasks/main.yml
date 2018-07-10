@@ -7,7 +7,9 @@
 - name: Deploy
   k8s:
     definition: '{{ lookup("file", item) }}'
-  with_fileglob:
-    - files/*
+  loop:
+    - operator.yaml
+    - cluster.yaml
+    - storageclass.yaml
 
 # TODO: add actual configuration options
