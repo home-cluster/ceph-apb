@@ -14,7 +14,8 @@ update: ## Pull new source files from the Rook project
 	done
 	sed -i '/ROOK_HOSTPATH_REQUIRES_PRIVILEGED/{n;s/\(.*value: \)"false"/\1"true"/}' files/operator.yaml
 	sed -i 's/\(.*\)# \(- name: FLEXVOLUME_DIR_PATH\)/\1\2/' files/operator.yaml
-	sed -i '/FLEXVOLUME_DIR_PATH/{n;s|\(.*\)#\(\s*value: \).*|\1\2"/var/lib/origin/volumeplugins/"|}' files/operator.yaml
+	sed -i '/FLEXVOLUME_DIR_PATH/{n;s|\(.*\)#\(\s*value: \).*|\1\2"{{ flex_volume_plugin_dir }}"|}' files/operator.yaml
+	rm -rf ${tmpdir}
 
 build: ## Build the APB
 ifeq ($(TAG),canary)

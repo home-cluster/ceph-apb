@@ -309,7 +309,7 @@ spec:
         #  value: "<KeyOfTheTaintToTolerate>"
         # Set the path where the Rook agent can find the flex volumes
         - name: FLEXVOLUME_DIR_PATH
-          value: "/var/lib/origin/volumeplugins/"
+          value: "{{ flex_volume_plugin_dir }}"
         # Rook Discover toleration. Will tolerate all taints with all keys.
         # Choose between NoSchedule, PreferNoSchedule and NoExecute:
         # - name: DISCOVER_TOLERATION
