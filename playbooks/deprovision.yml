@@ -5,6 +5,5 @@
   vars:
     state: absent
   roles:
-  - role: ansibleplaybookbundle.asb-modules
   - role: ceph-apb
     playbook_debug: false
