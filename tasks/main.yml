@@ -33,7 +33,7 @@
         namespace: rook-ceph
       spec:
         replicated:
-          size: '{{ replicas }}'
+          size: '{{ replicas | int }}'
 
 - name: Create StorageClass
   k8s:
@@ -43,7 +43,7 @@
       metadata:
         name: rook-ceph-block
         annotations:
-          storageclass.kubernetes.io/is-default-class: "{{ set_default_storage_class }}"
+          storageclass.kubernetes.io/is-default-class: "{{ set_default_storage_class | string }}"
       provisioner: ceph.rook.io/block
       parameters:
         pool: replicapool
