@@ -4,11 +4,25 @@
 ## Provision ceph
 ##############################################################################
 
-- name: Deploy
+- name: Check if cluster is openshift
+  set_fact:
+    is_openshift: "{{ q('k8s', cluster_info='version').0.get('openshift') | bool }}"
+
+- name: Set up security context constraints for OpenShift
+  k8s:
+    definition: '{{ lookup("file", "scc.yaml") }}'
+  when: is_openshift
+
+- name: Deploy CRDs and operator
+  k8s:
+    definition: '{{ lookup("template", "operator.yaml") }}'
+  vars:
+    rook_required_privileged: '{{ is_openshift | bool }}'
+
+- name: Deploy cluster and storageclass
   k8s:
     definition: '{{ lookup("file", item) }}'
   loop:
-    - operator.yaml
     - cluster.yaml
     - storageclass.yaml
 
