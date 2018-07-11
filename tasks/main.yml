@@ -6,7 +6,7 @@
 
 - name: Check if cluster is openshift
   set_fact:
-    is_openshift: "{{ q('k8s', cluster_info='version').0.get('openshift') | bool }}"
+    is_openshift: "{{ q('k8s', cluster_info='version').0.openshift is defined }}"
 
 - name: Set up security context constraints for OpenShift
   k8s:
@@ -17,7 +17,7 @@
   k8s:
     definition: '{{ lookup("template", "operator.yaml") }}'
   vars:
-    rook_required_privileged: '{{ is_openshift | bool }}'
+    rook_requires_privileged: '{{ is_openshift }}'
 
 - name: Deploy cluster and storageclass
   k8s:
