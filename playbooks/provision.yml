@@ -6,6 +6,5 @@
     state: present
   roles:
   - role: ansibleplaybookbundle.asb-modules
-  - role: ansible.kubernetes-modules
   - role: ceph-apb
     playbook_debug: false
