@@ -8,7 +8,7 @@ APB_DIR          ?= .
 update: ## Pull new source files from the Rook project
 	$(eval tmpdir := $(shell mktemp -d))
 	git clone https://github.com/rook/rook.git ${tmpdir}/rook
-	for item in scc cluster storageclass ; do \
+	for item in scc cluster ; do \
 		cp ${tmpdir}/rook/cluster/examples/kubernetes/ceph/$${item}.yaml files/$${item}.yaml ; \
 	done
 	cp ${tmpdir}/rook/cluster/examples/kubernetes/ceph/operator.yaml templates/operator.yaml

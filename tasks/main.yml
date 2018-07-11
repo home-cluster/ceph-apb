@@ -19,11 +19,32 @@
   vars:
     rook_requires_privileged: '{{ is_openshift }}'
 
-- name: Deploy cluster and storageclass
+- name: Deploy cluster
   k8s:
-    definition: '{{ lookup("file", item) }}'
-  loop:
-    - cluster.yaml
-    - storageclass.yaml
+    definition: '{{ lookup("file", "cluster.yaml") }}'
 
-# TODO: add actual configuration options
+- name: Create storage pool
+  k8s:
+    definition:
+      apiVersion: ceph.rook.io/v1beta1
+      kind: Pool
+      metadata:
+        name: replicapool
+        namespace: rook-ceph
+      spec:
+        replicated:
+          size: '{{ replicas }}'
+
+- name: Create StorageClass
+  k8s:
+    definition:
+      apiVersion: storage.k8s.io/v1
+      kind: StorageClass
+      metadata:
+        name: rook-ceph-block
+        annotations:
+          storageclass.kubernetes.io/is-default-class: "{{ set_default_storage_class }}"
+      provisioner: ceph.rook.io/block
+      parameters:
+        pool: replicapool
+        clusterNamespace: rook-ceph
