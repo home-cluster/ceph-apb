@@ -8,13 +8,25 @@ APB_DIR          ?= .
 update: ## Pull new source files from the Rook project
 	$(eval tmpdir := $(shell mktemp -d))
 	git clone https://github.com/rook/rook.git ${tmpdir}/rook
-	for item in scc cluster ; do \
+	# Static files
+	for item in scc dashboard-external ; do \
 		cp ${tmpdir}/rook/cluster/examples/kubernetes/ceph/$${item}.yaml files/$${item}.yaml ; \
 	done
+	# Operator
+	echo "Copy operator and setup template options"
 	cp ${tmpdir}/rook/cluster/examples/kubernetes/ceph/operator.yaml templates/operator.yaml
 	sed -i '/ROOK_HOSTPATH_REQUIRES_PRIVILEGED/{n;s/\(.*value: \)"false"/\1"{{ rook_requires_privileged }}"/}' templates/operator.yaml
 	sed -i 's/\(.*\)# \(- name: FLEXVOLUME_DIR_PATH\)/\1\2/' templates/operator.yaml
 	sed -i '/FLEXVOLUME_DIR_PATH/{n;s|\(.*\)#\(\s*value: \).*|\1\2"{{ flex_volume_plugin_dir }}"|}' templates/operator.yaml
+	# Cluster
+	echo "Copy cluster and setup template options"
+	cp ${tmpdir}/rook/cluster/examples/kubernetes/ceph/cluster.yaml templates/cluster.yaml
+	sed -i 's/\(\s*hostNetwork:\).*/\1 {{ use_host_network }}/' templates/cluster.yaml
+	sed -i '/mon:/{n;s/\(\s*count:\).*/\1 {{ mon_count }}/}' templates/cluster.yaml
+	sed -i 's/\(\s*allowMultiplePerNode:\).*/\1 {{ allow_multiple_mon_per_node }}/' templates/cluster.yaml
+	sed -i '/dashboard:/{n;s/\(\s*enabled:\).*/\1 {{ enable_dashboard }}/}' templates/cluster.yaml
+	sed -i 's/\(\s*useAllNodes:\).*/\1 {{ use_all_nodes }}/' templates/cluster.yaml
+	sed -i 's/\(\s*useAllDevices:\).*/\1 {{ use_all_devices }}/' templates/cluster.yaml
 	rm -rf ${tmpdir}
 
 build: ## Build the APB

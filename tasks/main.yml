@@ -21,11 +21,12 @@
 
 - name: Deploy cluster
   k8s:
-    definition: '{{ lookup("file", "cluster.yaml") }}'
+    definition: '{{ lookup("template", "cluster.yaml") }}'
 
+# Process this one as a string to workaround the jinja native types issue
 - name: Create storage pool
   k8s:
-    definition:
+    definition: |
       apiVersion: ceph.rook.io/v1beta1
       kind: Pool
       metadata:
@@ -33,7 +34,7 @@
         namespace: rook-ceph
       spec:
         replicated:
-          size: '{{ replicas | int }}'
+          size: {{ replicas | int }}
 
 - name: Create StorageClass
   k8s:
@@ -48,3 +49,17 @@
       parameters:
         pool: replicapool
         clusterNamespace: rook-ceph
+
+- name: Create route for dashboard service
+  k8s:
+    definition:
+      kind: Route
+      apiVersion: route.openshift.io/v1
+      metadata:
+        name: dashboard
+        namespace: rook-ceph
+      spec:
+        to:
+          kind: Service
+          name: rook-ceph-mgr-dashboard
+  when: is_openshift
